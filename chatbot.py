@@ -2,13 +2,12 @@ import os
 from flask import Flask, request, jsonify
 import requests
 
-# Reemplaza los valores con los que obtuviste de Meta Developers
-# (Los tokens largos aquí NO son seguros. Usa variables de entorno en producción)
+# 1. Lee las variables de entorno configuradas en Render (os.environ.get)
 VERIFY_TOKEN = os.environ.get('VERIFY_TOKEN')
 ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN')
 PHONE_NUMBER_ID = os.environ.get('PHONE_NUMBER_ID')
 
-# Crea la aplicación Flask
+# 2. Crea la aplicación Flask
 app = Flask(__name__)
 
 # --- WEBHOOK PARA RECIBIR MENSAJES ---
@@ -28,8 +27,6 @@ def webhook():
             else:
                 return 'Verification token mismatch', 403
         else:
-            # FIX: Si se accede por navegador (sin parámetros), devolvemos 200 para evitar el error 500
-            # Meta nunca enviará un GET sin parámetros, solo un navegador lo haría.
             return 'Webhook activo. Esperando conexión de Meta.', 200 
     
     elif request.method == 'POST':
@@ -50,14 +47,13 @@ def webhook():
                                 
                                 # Lógica del chatbot: Si el mensaje es "hola", responde
                                 if 'hola' in incoming_text:
-                                    response_text = '¡Hola! 👋 ¡Tu bot está funcionando!'
+                                    response_text = '¡Hola! 👋 ¡Tu bot está funcionando en Render!'
                                     send_whatsapp_message(from_number, response_text)
 
         return 'ok', 200
 
 def send_whatsapp_message(to_number, text_message):
     """Función para enviar un mensaje de vuelta."""
-    # Usamos la versión de la API de Facebook/Meta que estaba en tu código original
     url = f'https://graph.facebook.com/v18.0/{PHONE_NUMBER_ID}/messages' 
     
     headers = {
@@ -78,7 +74,6 @@ def send_whatsapp_message(to_number, text_message):
     response = requests.post(url, headers=headers, json=data)
     print('API response:', response.json())
 
+# Nota: Render usa Gunicorn, por lo que ignora este bloque.
 if __name__ == '__main__':
-    # Cambia a un puerto diferente para intentar forzar un nuevo subdominio en ngrok
-
-    app.run(host='0.0.0.0', port=9001) 
+    app.run(host='0.0.0.0', port=5000)
