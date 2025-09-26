@@ -4,9 +4,9 @@ import requests
 
 # Reemplaza los valores con los que obtuviste de Meta Developers
 # (Los tokens largos aquí NO son seguros. Usa variables de entorno en producción)
-VERIFY_TOKEN = 'CHATBOTAR'
-ACCESS_TOKEN = 'EAAHZCmYZAqj3MBPi684RkQsuapSrlPxMYwIgIE9hSrevzBdcOF5HA8qyqZAEnZCeyMm3MRoJCJtmJC2ZBH0rfp9bN89bZCeojG8E3NSgb9dJ2ZBkVChrHaJXnXokKe90AT4SawiKeEEFYCpmaVglEH9tk3fwguALA6sKC1FH0QrZCSDboV85VypkxFayTCfRvFsaMPwNOp03ywjoue7jZCRbWWZBb3gWSmdISH1iF4uykmVLnBmgZDZD' 
-PHONE_NUMBER_ID = '562509826920307'
+VERIFY_TOKEN = os.environ.get('VERIFY_TOKEN')
+ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN')
+PHONE_NUMBER_ID = os.environ.get('PHONE_NUMBER_ID')
 
 # Crea la aplicación Flask
 app = Flask(__name__)
@@ -80,4 +80,5 @@ def send_whatsapp_message(to_number, text_message):
 
 if __name__ == '__main__':
     # Cambia a un puerto diferente para intentar forzar un nuevo subdominio en ngrok
+
     app.run(host='0.0.0.0', port=9001) 
